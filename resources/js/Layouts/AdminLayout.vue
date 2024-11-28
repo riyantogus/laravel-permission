@@ -1,23 +1,22 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { nextTick, onMounted } from 'vue';
 import Header from '@/Components/Admin/Header.vue';
 import Sidebar from '@/Components/Admin/Sidebar.vue';
 import FlashMessages from '@/Components/FlashMessages.vue';
 
 import { type IStaticMethods } from "preline/preline";
+
 declare global {
   interface Window {
-    HSStaticMethods: IStaticMethods;
+    HSStaticMethods?: IStaticMethods;
   }
 }
 
-onMounted(() => {
-  setTimeout(() => {
-    // Initialize the Preline library after it's loaded
-    if (window.HSStaticMethods) {
-      window.HSStaticMethods.autoInit();
-    }
-  }, 100)
+onMounted(async () => {
+  await nextTick();
+  if (window.HSStaticMethods) {
+    window.HSStaticMethods.autoInit();
+  }
 });
 </script>
 

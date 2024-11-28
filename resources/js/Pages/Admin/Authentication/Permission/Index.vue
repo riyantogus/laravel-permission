@@ -1,10 +1,12 @@
 <script setup>
-import { Head, useForm } from "@inertiajs/vue3";
+import { nextTick, ref, watch } from "vue";
+import { Head, router } from "@inertiajs/vue3";
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Pagination from '@/Components/Admin/Pagination.vue';
 import PrimaryButtonLink from "@/Components/PrimaryButtonLink.vue";
 import ActionForm from '@/Pages/Admin/Authentication/Permission/Partials/ActionForm.vue';
 import AngleRightIcon from "@/Components/Icons/AngleRightIcon.vue";
+import { throttle } from "lodash";
 
 const props = defineProps({
   filters: {
@@ -15,18 +17,28 @@ const props = defineProps({
   },
 });
 
-const form = useForm({
-  search: props.filters.search,
-});
+const search = ref(props.filters.search);
 
-const search = () => {
-  form.get(route('admin-permission.index', { search: form.search }), {
-    replace: true,
-    preserveState: true,
-    preserveScroll: true,
-    only: ['filters', 'permissions'],
-  })
-};
+watch(
+  () => search.value,
+  throttle((value) => {
+    router.get(route('admin-permission.index'), { search: value }, {
+      replace: true,
+      preserveState: true,
+      preserveScroll: true,
+      only: ['filters', 'permissions'],
+      onSuccess: () => {
+        nextTick(() => {
+          // Trigger Preline re-initialization
+          window.HSStaticMethods.autoInit();
+        });
+      },
+      onError: (error) => {
+        console.error("Error fetching permission data:", error);
+      }
+    });
+  }, 500)
+);
 </script>
 
 <template>
@@ -59,12 +71,12 @@ const search = () => {
             <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200">
               <!-- Input -->
               <div class="sm:col-span-1">
-                <form @keyup="search">
+                <form>
                   <label for="search" class="sr-only">Search</label>
                   <div class="relative">
                     <input type="text" id="search" name="search"
                       class="py-2 px-3 ps-11 block w-full border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-gray-500 disabled:opacity-50 disabled:pointer-events-none"
-                      placeholder="Search" v-model="form.search">
+                      placeholder="Search" v-model="search">
                     <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4">
                       <svg class="size-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                         fill="currentColor" viewBox="0 0 16 16">

@@ -25,8 +25,7 @@ const user = usePage().props.auth.user;
           <div class="hs-dropdown [--placement:bottom-right] relative inline-flex">
             <button id="hs-dropdown-with-header" type="button"
               class="w-[2.375rem] h-[2.375rem] inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-full border border-transparent text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none">
-              <img class="inline-block size-[38px] rounded-full ring-2 ring-white" :src="'/johnwick.png'"
-                alt="Image Description">
+              <img class="inline-block rounded-full w-9 h-auto ring-2 ring-white" :src="'/johnwick.png'" alt="Avatar">
             </button>
 
             <div
