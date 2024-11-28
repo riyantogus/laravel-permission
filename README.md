@@ -3,6 +3,7 @@
 -   Clone the repository with **git clone**
 -   Copy **.env.example** file to **.env** and edit database credentials there
 -   Run **composer install**
+-   Run **npm install**
 -   Run **php artisan key:generate**
 -   Run **php artisan migrate**
 -   Run **php artisan db:seed --class=PermissionSeeder** (it has some seeded data for your testing)
